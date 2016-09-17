@@ -43,6 +43,13 @@ tar -xzvf 2.1.1.tar.gz
 mv magento2-2.1.1/ magento2/
 
 cd /var/www/magento2
+find . -type f -exec chmod 644 {} \;
+find . -type d -exec chmod 755 {} \;
+find ./var -type d -exec chmod 777 {} \;
+find ./pub/media -type d -exec chmod 777 {} \;
+find ./pub/static -type d -exec chmod 777 {} \;
+chmod 777 ./app/etc
+chmod 644 ./app/etc/*.xml
 composer install
 
 
