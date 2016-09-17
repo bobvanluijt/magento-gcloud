@@ -29,7 +29,7 @@ read DBHOST
 
 mysql_config_editor set --login-path=local --host=${DBHOST} --user=root --password
 
-mysql --login-path=local -e "create database magentodb; create user magentouser@localhost identified by 'magentouser@'; grant all privileges on magentodb.* to 'magentouser'@'%' IDENTIFIED BY 'magentopass'; flush privileges;"
+mysql --login-path=local -e "create database magentodb; create user magentouser@localhost; grant all privileges on magentodb.* to 'magentouser'@'%' IDENTIFIED BY 'magentopass'; flush privileges;"
 
 # Install composer
 cd ~/
@@ -51,6 +51,32 @@ find ./pub/static -type d -exec chmod 777 {} \;
 chmod 777 ./app/etc
 chmod 644 ./app/etc/*.xml
 composer install
+
+chmod +x /var/www/magento2/bin/magento
+
+./magento setup:install --backend-frontname="adminlogin" \
+--key="biY8vdWx4w8KV5Q59380Fejy36l6ssUb" \
+--db-host="${DBHOST}" \
+--db-name="magentodb" \
+--db-user="magentouser" \
+--db-password="magentopass" \
+--language="en_US" \
+--currency="USD" \
+--timezone="America/New_York" \
+--use-rewrites=1 \
+--use-secure=0 \
+--base-url="http://www.newmagento.com" \
+--base-url-secure="https://www.newmagento.com" \
+--admin-user=adminuser \
+--admin-password=admin123@ \
+--admin-email=admin@newmagento.com \
+--admin-firstname=admin \
+--admin-lastname=user \
+--cleanup-database
+
+cd /var/www/magento2/
+chmod 700 /var/www/magento2/app/etc
+chown -R www-data:www-data .
 
 rm /etc/nginx/sites-enabled/default
 wget -O /etc/nginx/sites-enabled/default https://raw.githubusercontent.com/bobvanluijt/magento-gcloud/master/magento
