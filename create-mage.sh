@@ -52,5 +52,8 @@ chmod 777 ./app/etc
 chmod 644 ./app/etc/*.xml
 composer install
 
+rm /etc/nginx/sites-enabled/default
+wget -O /etc/nginx/sites-enabled/default https://raw.githubusercontent.com/bobvanluijt/magento-gcloud/master/magento
 
-wget -O /etc/nginx/sites-enabled/magento https://raw.githubusercontent.com/bobvanluijt/magento-gcloud/master/magento
+service php7.0-fpm restart
+service nginx restart
