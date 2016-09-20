@@ -12,10 +12,15 @@ fi
 
 apt-get update
 
-apt-get install nginx -qq -y
+apt-get -qy install nginx git-core mysql-client-5.7 php7.0-fpm php7.0-mcrypt php7.0-curl php7.0-cli php7.0-mysql php7.0-gd php7.0-xsl php7.0-json php7.0-intl php-pear php7.0-dev php7.0-common php7.0-mbstring php7.0-zip php-soap libcurl3 curl
 
-apt-get install mysql-client-5.7 php7.0-fpm php7.0-mcrypt php7.0-curl php7.0-cli php7.0-mysql php7.0-gd php7.0-xsl php7.0-json php7.0-intl php-pear php7.0-dev php7.0-common php7.0-mbstring php7.0-zip php-soap libcurl3 curl -y
+# Install sample data
+cd /var/www
+git clone https://github.com/magento/magento2-sample-data.git
+cd magento2-sample-data/dev/tools
+php -f build-sample-data.php -- --ce-source="/var/www/magento2"
 
+# set limits
 echo "memory_limit = 512M
 max_execution_time = 1800
 zlib.output_compression = On" >> /etc/php/7.0/fpm/php.ini
