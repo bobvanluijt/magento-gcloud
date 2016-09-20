@@ -14,12 +14,6 @@ apt-get update
 
 apt-get -qy install nginx git-core mysql-client-5.7 php7.0-fpm php7.0-mcrypt php7.0-curl php7.0-cli php7.0-mysql php7.0-gd php7.0-xsl php7.0-json php7.0-intl php-pear php7.0-dev php7.0-common php7.0-mbstring php7.0-zip php-soap libcurl3 curl
 
-# Install sample data
-cd /var/www
-git clone https://github.com/magento/magento2-sample-data.git
-cd magento2-sample-data/dev/tools
-php -f build-sample-data.php -- --ce-source="/var/www/magento2"
-
 # set limits
 echo "memory_limit = 512M
 max_execution_time = 1800
@@ -34,7 +28,10 @@ read DBHOST
 
 mysql_config_editor set --login-path=local --host=${DBHOST} --user=root --password
 
-mysql --login-path=local -e "create database magentodb; create user magentouser@localhost; grant all privileges on magentodb.* to 'magentouser'@'%' IDENTIFIED BY 'magentopass'; flush privileges;"
+echo "What name do you want to use for the DB?";
+read DBNAME
+
+mysql --login-path=local -e "create database ${DBNAME}; create user magentouser@localhost; grant all privileges on ${DBNAME}.* to 'magentouser'@'%' IDENTIFIED BY 'magentopass'; flush privileges;"
 
 # Install composer
 cd ~/
@@ -46,6 +43,12 @@ cd /var/www/
 wget https://github.com/magento/magento2/archive/2.1.1.tar.gz
 tar -xzvf 2.1.1.tar.gz
 mv magento2-2.1.1/ magento2/
+
+# Install sample data
+cd /var/www
+git clone https://github.com/magento/magento2-sample-data.git
+cd magento2-sample-data/dev/tools
+php -f build-sample-data.php -- --ce-source="/var/www/magento2"
 
 cd /var/www/magento2
 find . -type f -exec chmod 644 {} \;
@@ -62,7 +65,7 @@ chmod +x /var/www/magento2/bin/magento
 ./magento setup:install --backend-frontname="adminlogin" \
 --key="biY8vdWx4w8KV5Q59380Fejy36l6ssUb" \
 --db-host="${DBHOST}" \
---db-name="magentodb" \
+--db-name="${DBNAME}" \
 --db-user="magentouser" \
 --db-password="magentopass" \
 --language="en_US" \
