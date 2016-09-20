@@ -31,7 +31,7 @@ mysql_config_editor set --login-path=local --host=${DBHOST} --user=root --passwo
 echo "What name do you want to use for the DB? "
 read DBNAME
 
-mysql --login-path=local -e "create database ${DBNAME}; create user magentouser@localhost; grant all privileges on ${DBNAME}.* to 'magentouser'@'%' IDENTIFIED BY 'magentopass'; flush privileges;"
+mysql --login-path=local -e "create database IF NOT EXISTS ${DBNAME}; create user IF NOT EXISTS magentouser@localhost; grant all privileges on ${DBNAME}.* to 'magentouser'@'%' IDENTIFIED BY 'magentopass'; flush privileges;"
 
 # Install composer
 cd ~/
@@ -41,7 +41,7 @@ mv composer.phar /usr/bin/composer
 
 cd /var/www/
 wget https://github.com/magento/magento2/archive/2.1.1.tar.gz
-tar -xzvf 2.1.1.tar.gz
+tar -xzf 2.1.1.tar.gz
 mv magento2-2.1.1/ magento2/
 
 # Install sample data
@@ -62,7 +62,7 @@ composer install
 
 chmod +x /var/www/magento2/bin/magento
 
-./magento setup:install --backend-frontname="adminlogin" \
+/var/www/magento2/bin/magento setup:install --backend-frontname="adminlogin" \
 --key="biY8vdWx4w8KV5Q59380Fejy36l6ssUb" \
 --db-host="${DBHOST}" \
 --db-name="${DBNAME}" \
