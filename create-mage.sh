@@ -28,7 +28,7 @@ read DBHOST
 
 mysql_config_editor set --login-path=local --host=${DBHOST} --user=root --password
 
-echo "What name do you want to use for the DB?";
+echo "What name do you want to use for the DB? "
 read DBNAME
 
 mysql --login-path=local -e "create database ${DBNAME}; create user magentouser@localhost; grant all privileges on ${DBNAME}.* to 'magentouser'@'%' IDENTIFIED BY 'magentopass'; flush privileges;"
